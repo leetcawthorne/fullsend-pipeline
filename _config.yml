@@ -1,0 +1,56 @@
+# =====================================================
+# Full Send Pipeline - Branded GitHub Pages Config (Merged)
+# =====================================================
+
+title: "FullSend Passive V1"
+description: "Automated AI-generated content published daily."
+theme: minima
+
+# Author & Branding
+author: "FullSend Automation"
+show_downloads: false
+show_excerpts: true
+timezone: UTC
+future: true
+
+# Markdown rendering
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+
+# URL and base paths
+baseurl: "/fullsend-pipeline"
+url: "https://leetcawthorne.github.io"
+
+# Content folders
+include:
+  - _posts
+  - assets
+  - assets/images
+
+# Branding
+logo: /assets/images/fullsend-logo.png
+favicon: /assets/images/favicon.ico
+
+# Navigation (header links)
+header_pages:
+  - index.md
+  - about.md
+  - contact.md
+
+# Footer links
+footer_links:
+  - title: "GitHub"
+    url: "https://github.com/leetcawthorne/fullsend-pipeline"
+  - title: "RSS"
+    url: "/feed.xml"
+
+# Custom CSS integration (optional)
+sass:
+  style: compressed
+
+# Collections
+collections:
+  posts:
+    output: true
