@@ -49,3 +49,8 @@ footer_links:
 # Custom CSS integration (optional)
 sass:
   style: compressed
+
+# Collections
+collections:
+  posts:
+    output: true
