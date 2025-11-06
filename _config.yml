@@ -16,3 +16,16 @@ include:
 # Branding
 logo: /assets/images/logo.png
 favicon: /assets/images/favicon.ico
+
+# Navigation (appears in site header)
+header_pages:
+  - index.md
+  - about.md
+  - contact.md
+
+# Footer links (shown at bottom if theme supports)
+footer_links:
+  - title: "GitHub"
+    url: "https://github.com/leetcawthorne/fullsend-pipeline"
+  - title: "RSS"
+    url: "/feed.xml"
