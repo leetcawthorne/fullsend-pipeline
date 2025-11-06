@@ -25,7 +25,7 @@ url: "https://leetcawthorne.github.io"
 
 # Content folders
 include:
-  - content
+  - _posts
   - assets
   - assets/images
 
