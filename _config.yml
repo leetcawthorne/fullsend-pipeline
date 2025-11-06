@@ -48,6 +48,7 @@ footer_links:
 
 # Custom CSS integration (optional)
 sass:
+  sass_dir: _sass
   style: compressed
 
 # Collections
