@@ -34,7 +34,9 @@ def generate_article(keyword: str) -> str:
         f"to take action. The tools are free, global, and ready for you to explore."
     )
 
+    # ✅ Added `layout: post` so Jekyll recognizes it as a blog post
     article = f"""---
+layout: post
 title: "{title}"
 date: {datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")}
 tags: [{keyword.replace(" ", "-")}]
@@ -60,9 +62,10 @@ description: "Learn how {keyword} can help you build income and efficiency."
 """
     return article
 
+
 def main():
     keyword = random.choice(NICHES)
-    filename = f"{datetime.utcnow().strftime('%Y-%m-%d')}-{keyword.replace(' ', '-')}.md"
+    filename = f"{datetime.utcnow().strftime('%Y-%m-%d')}-{keyword.lower().replace(' ', '-')}.md"
     filepath = os.path.join(CONTENT_DIR, filename)
 
     if os.path.exists(filepath):
@@ -74,6 +77,7 @@ def main():
         f.write(content)
 
     print(f"✅ Generated new article: {filepath}")
+
 
 if __name__ == "__main__":
     main()
