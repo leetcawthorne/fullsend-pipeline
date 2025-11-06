@@ -1,9 +1,9 @@
-name: Auto Publish
+name: Full Send – Auto Publish
 
 on:
   schedule:
     - cron: '0 9 * * *'  # runs daily at 9 AM UTC
-  workflow_dispatch:      # allows manual run from GitHub UI
+  workflow_dispatch:
   push:
     paths:
       - 'scripts/**'
@@ -12,7 +12,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write    # allows the workflow to commit and push
+      contents: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -20,21 +21,27 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
-            - name: Run content generator
+      - name: Run content generator
+        shell: bash
         run: |
           mkdir -p scripts content
           if [ ! -f scripts/generate_content.py ]; then
-            echo "⚠️ generate_content.py not found. Creating placeholder script."
+            echo "⚠️  generate_content.py not found. Creating placeholder script."
             echo "print('Placeholder generator: add generate_content.py script')" > scripts/generate_content.py
           fi
           python3 scripts/generate_content.py
 
       - name: Commit and push if new content
+        shell: bash
         run: |
           git config user.name "fullsend-bot"
           git config user.email "bot@fullsend.ai"
           git add content
-          git diff --quiet && echo "No new articles to commit" || \
-          (git commit -m "Auto-generate new content" && git push)
+          if git diff --cached --quiet; then
+            echo "No new articles to commit"
+          else
+            git commit -m "Auto-generate new content"
+            git push
+          fi
