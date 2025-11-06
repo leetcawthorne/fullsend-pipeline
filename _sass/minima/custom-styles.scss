@@ -1,4 +1,4 @@
-// --- FullSend Passive custom theme ---
+// --- FullSend Passive custom theme (Light + Dark Mode) ---
 $brand-color: #2563eb;   // blue accent
 $text-color: #222;
 $background-color: #fafafa;
@@ -17,6 +17,7 @@ body {
   box-shadow: $shadow;
   border-radius: 12px;
   background: #fff;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 // --- Headings ---
@@ -77,6 +78,59 @@ a {
   margin-bottom: 1.5rem;
   a {
     margin: 0 1rem;
+  }
+}
+
+// --- Dark Mode ---
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #0f172a;
+    color: #e2e8f0;
+    box-shadow: none;
+  }
+
+  h1, h2, h3 {
+    color: #f8fafc;
+  }
+
+  a {
+    color: lighten($brand-color, 25%);
+    border-bottom-color: rgba(255, 255, 255, 0.3);
+    &:hover {
+      color: lighten($brand-color, 40%);
+      border-color: lighten($brand-color, 40%);
+    }
+  }
+
+  .site-footer {
+    color: #94a3b8;
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .logo {
+    box-shadow: 0 2px 15px rgba(255, 255, 255, 0.1);
+  }
+}
+
+// --- Manual toggle button ---
+.theme-toggle {
+  display: inline-block;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: 2px solid $brand-color;
+  border-radius: 50%;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: $brand-color;
+  font-size: 1rem;
+  z-index: 1000;
+
+  &:hover {
+    background-color: $brand-color;
+    color: #fff;
   }
 }
 
