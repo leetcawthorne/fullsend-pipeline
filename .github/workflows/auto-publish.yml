@@ -36,15 +36,6 @@ jobs:
           cp -r content/* public/ || echo "No content found."
           touch public/.nojekyll   # Ensures Markdown renders directly
           
-      - name: 🧾 Convert Markdown to HTML
-        run: |
-          pip install markdown
-          mkdir -p public
-          for f in content/*.md; do
-            filename=$(basename "$f" .md)
-            python -m markdown "$f" > "public/${filename}.html"
-          done
-
       - name: 🚀 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
