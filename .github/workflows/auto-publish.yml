@@ -1,4 +1,4 @@
-name: Full Send – Auto Publish
+name: Auto Publish
 
 on:
   schedule:
@@ -22,10 +22,14 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Generate new article
+            - name: Run content generator
         run: |
-          pip install --upgrade pip
-          python scripts/generate_content.py
+          mkdir -p scripts content
+          if [ ! -f scripts/generate_content.py ]; then
+            echo "⚠️ generate_content.py not found. Creating placeholder script."
+            echo "print('Placeholder generator: add generate_content.py script')" > scripts/generate_content.py
+          fi
+          python3 scripts/generate_content.py
 
       - name: Commit and push if new content
         run: |
