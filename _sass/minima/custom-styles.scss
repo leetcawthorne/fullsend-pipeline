@@ -1,0 +1,25 @@
+// --- FullSend Passive custom theme ---
+$brand-color: #2563eb;   // blue accent
+$text-color: #222;
+$background-color: #fafafa;
+$link-color: #2563eb;
+$link-hover-color: darken($link-color, 15%);
+
+body {
+  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+  background-color: $background-color;
+  line-height: 1.7;
+  margin: 2rem;
+}
+
+h1, h2, h3 {
+  color: #111;
+  font-weight: 700;
+  margin-top: 1.6rem;
+}
+
+a {
+  text-decoration: none;
+  border-bottom: 1px solid lighten($link-color, 25%);
+  &:hover { border-color: $link-hover-color; }
+}
