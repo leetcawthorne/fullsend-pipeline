@@ -1,47 +1,51 @@
-name: Full Send – Auto Publish
+name: 🚀 Full Send Passive V1 — Auto Deploy
 
 on:
-  schedule:
-    - cron: '0 9 * * *'  # runs daily at 9 AM UTC
-  workflow_dispatch:
   push:
-    paths:
-      - 'scripts/**'
+    branches: [ "main" ]
+  schedule:
+    - cron: "0 12 * * *"   # Every day at 12:00 UTC
+  workflow_dispatch:        # Allow manual runs from GitHub UI
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: 🧩 Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: "3.11"
 
-      - name: Run content generator
-        shell: bash
+      - name: 📦 Install dependencies
         run: |
-          mkdir -p scripts content
-          if [ ! -f scripts/generate_content.py ]; then
-            echo "⚠️  generate_content.py not found. Creating placeholder script."
-            echo "print('Placeholder generator: add generate_content.py script')" > scripts/generate_content.py
-          fi
-          python3 scripts/generate_content.py
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || true
 
-      - name: Commit and push if new content
-        shell: bash
+      - name: ⚙️ Run Full Send Automation
         run: |
-          git config user.name "fullsend-bot"
-          git config user.email "bot@fullsend.ai"
-          git add content
-          if git diff --cached --quiet; then
-            echo "No new articles to commit"
-          else
-            git commit -m "Auto-generate new content"
-            git push
-          fi
+          python main.py  # your automation entrypoint
+          echo "✅ Automation complete — site content generated."
+
+      - name: 🌐 Prepare static site for publishing
+        run: |
+          mkdir -p public
+          cp -r output/* public/ || echo "No static output found, skipping copy."
+          touch public/.nojekyll   # Disable Jekyll processing
+
+      - name: 🚀 Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+
+      - name: ✅ Done
+        run: echo "Full Send Passive V1 deployed successfully!"
