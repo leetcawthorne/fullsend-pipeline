@@ -1,31 +1,50 @@
-title: FullSend Passive V1
-description: "Automated AI-generated content published daily."
-theme: minima
+# =====================================================
+# Full Send Pipeline - Branded GitHub Pages Config (Merged)
+# =====================================================
 
-# Optional meta and convenience settings
+title: "FullSend Passive V1"
+description: "Automated AI-generated content published daily."
+theme: jekyll-theme-cayman
+
+# Author & Branding
 author: "FullSend Automation"
+show_downloads: false
 show_excerpts: true
-markdown: kramdown
 timezone: UTC
 future: true
 
-# Include your generated Markdown posts
+# Markdown rendering
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+
+# URL and base paths
+baseurl: "/fullsend-pipeline"
+url: "https://leetcawthorne.github.io"
+
+# Content folders
 include:
   - content
+  - assets
 
 # Branding
 logo: /assets/images/logo.png
 favicon: /assets/images/favicon.ico
 
-# Navigation (appears in site header)
+# Navigation (header links)
 header_pages:
   - index.md
   - about.md
   - contact.md
 
-# Footer links (shown at bottom if theme supports)
+# Footer links
 footer_links:
   - title: "GitHub"
     url: "https://github.com/leetcawthorne/fullsend-pipeline"
   - title: "RSS"
     url: "/feed.xml"
+
+# Custom CSS integration (optional)
+sass:
+  style: compressed
