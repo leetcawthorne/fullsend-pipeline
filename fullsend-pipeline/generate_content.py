@@ -11,7 +11,7 @@ NICHES = [
     "self improvement via automation"
 ]
 
-CONTENT_DIR = "./content"
+CONTENT_DIR = "./_posts"
 os.makedirs(CONTENT_DIR, exist_ok=True)
 
 def generate_article(keyword: str) -> str:
