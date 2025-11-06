@@ -27,9 +27,10 @@ url: "https://leetcawthorne.github.io"
 include:
   - content
   - assets
+  - assets/images
 
 # Branding
-logo: /assets/images/logo.png
+logo: /assets/images/fullsend-logo.png
 favicon: /assets/images/favicon.ico
 
 # Navigation (header links)
