@@ -1,6 +1,6 @@
 ---
 title: "The Ultimate Guide to Digital Minimalism"
-date: 2025-11-06 17:55:31
+date: 2025-11-06 17:56:44
 tags: [digital-minimalism]
 description: "Learn how digital minimalism can help you build income and efficiency."
 ---
