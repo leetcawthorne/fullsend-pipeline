@@ -27,20 +27,19 @@ jobs:
 
       - name: ⚙️ Run Full Send Content Generator
         run: |
-          python scripts/generate_content.py
+          python fullsend-pipeline/generate_content.py
           echo "✅ Content generated successfully."
 
-      - name: 🌐 Prepare site for GitHub Pages
+      - name: 🧾 Commit and push new post
         run: |
-          mkdir -p public
-          cp -r content/* public/ || echo "No content found."
-          touch public/.nojekyll   # Ensures Markdown renders directly
-          
-      - name: 🚀 Deploy to GitHub Pages
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add _posts/*.md || echo "No new posts to commit."
+          git commit -m "📝 Auto-generated daily post" || echo "No changes to commit."
+          git push
+
+      - name: 🌐 Build and deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-
-      - name: ✅ Done
-        run: echo "Full Send Passive V1 deployed successfully!"
+          publish_dir: ./
