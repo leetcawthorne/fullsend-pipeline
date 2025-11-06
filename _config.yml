@@ -4,7 +4,7 @@
 
 title: "FullSend Passive V1"
 description: "Automated AI-generated content published daily."
-theme: jekyll-theme-cayman
+theme: minima
 
 # Author & Branding
 author: "FullSend Automation"
