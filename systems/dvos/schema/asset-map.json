@@ -4,8 +4,12 @@
       "id": "logo-primary",
       "path": "assets/logo/fullsend-logo.png",
       "category": "branding",
-      "version": "1.0",
+      "style": "energetic-creator",
+      "symbol": "dynamic-spark-node",
+      "version": "1.1",
       "auto_optimize": true,
+      "web_optimized": true,
+      "description": "Tech/AI-inspired logo with three-node spark network symbolizing automation and capital flow.",
       "last_updated": "2025-11-08"
     },
     {
