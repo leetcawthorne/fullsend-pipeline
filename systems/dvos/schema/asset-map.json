@@ -16,8 +16,13 @@
       "id": "header-bg",
       "path": "assets/backgrounds/header-bg.jpg",
       "category": "layout",
+      "style": "energetic-creator",
+      "version": "1.1",
       "auto_optimize": true,
-      "resolution_target": "1920x1080"
+      "web_optimized": true,
+      "resolution_target": "1920x1080",
+      "description": "Flowing AI-inspired energy wave background with magenta-orange-violet gradient, symbolizing data and momentum.",
+      "last_updated": "2025-11-08"
     }
   ]
 }
