@@ -1,0 +1,19 @@
+{
+  "assets": [
+    {
+      "id": "logo-primary",
+      "path": "assets/logo/fullsend-logo.png",
+      "category": "branding",
+      "version": "1.0",
+      "auto_optimize": true,
+      "last_updated": "2025-11-08"
+    },
+    {
+      "id": "header-bg",
+      "path": "assets/backgrounds/header-bg.jpg",
+      "category": "layout",
+      "auto_optimize": true,
+      "resolution_target": "1920x1080"
+    }
+  ]
+}
