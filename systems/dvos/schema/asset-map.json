@@ -23,6 +23,18 @@
       "resolution_target": "1920x1080",
       "description": "Flowing AI-inspired energy wave background with magenta-orange-violet gradient, symbolizing data and momentum.",
       "last_updated": "2025-11-08"
+    },
+    {
+      "id": "grid-light",
+      "path": "assets/backgrounds/grid-light.png",
+      "category": "pattern",
+      "style": "energetic-creator",
+      "version": "1.0",
+      "auto_optimize": true,
+      "web_optimized": true,
+      "resolution_target": "1920x1080",
+      "description": "Fluid, AI-inspired grid overlay with luminous lines and subtle magenta-orange glow on a darker gradient base. Designed for layered UI backgrounds and motion visuals.",
+      "last_updated": "2025-11-08"
     }
   ]
 }
