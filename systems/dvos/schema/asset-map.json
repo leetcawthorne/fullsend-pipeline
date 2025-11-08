@@ -35,6 +35,18 @@
       "resolution_target": "1920x1080",
       "description": "Fluid, AI-inspired grid overlay with luminous lines and subtle magenta-orange glow on a darker gradient base. Designed for layered UI backgrounds and motion visuals.",
       "last_updated": "2025-11-08"
+    },
+    {
+      "id": "post-default",
+      "path": "assets/posts/post-default.jpg",
+      "category": "media",
+      "style": "energetic-creator",
+      "version": "1.0",
+      "auto_optimize": true,
+      "web_optimized": true,
+      "resolution_target": "1200x675",
+      "description": "Dynamic AI-motion inspired post background featuring magenta-orange-violet flow streaks and a semi-transparent Full Send logo watermark. Serves as a fallback visual for post or card generation.",
+      "last_updated": "2025-11-08"
     }
   ]
 }
