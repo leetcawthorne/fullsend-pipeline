@@ -1,0 +1,14 @@
+{
+  "palette": {
+    "background": "#0E0E0E",
+    "accent": "#FF385C",
+    "text": "#EAEAEA"
+  },
+  "fonts": {
+    "primary": "Inter, sans-serif",
+    "secondary": "Space Grotesk, sans-serif"
+  },
+  "patterns": {
+    "grid": "assets/backgrounds/grid-light.png"
+  }
+}
