@@ -1,0 +1,12 @@
+{
+  "id": "button-primary",
+  "path": "assets/ui/button-primary.svg",
+  "category": "ui",
+  "style": "energetic-creator",
+  "version": "1.0",
+  "auto_optimize": true,
+  "web_optimized": true,
+  "resolution_target": "240x64",
+  "description": "Label-free primary button asset with dark base and magenta-orange-violet gradient. Features a soft energetic glow and balanced tone for primary actions and AI automation triggers.",
+  "last_updated": "2025-11-09"
+}
