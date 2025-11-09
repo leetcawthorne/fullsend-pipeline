@@ -47,6 +47,18 @@
       "resolution_target": "1200x675",
       "description": "Dynamic AI-motion inspired post background featuring magenta-orange-violet flow streaks and a semi-transparent Full Send logo watermark. Serves as a fallback visual for post or card generation.",
       "last_updated": "2025-11-08"
+    },
+    {
+      "id": "button-primary",
+      "path": "assets/ui/button-primary.svg",
+      "category": "ui",
+      "style": "energetic-creator",
+      "version": "1.0",
+      "auto_optimize": true,
+      "web_optimized": true,
+      "resolution_target": "240x64",
+      "description": "Label-free primary button asset with dark base and magenta-orange-violet gradient. Features soft violet glow and glossy highlight for dynamic UI or automation triggers.",
+      "last_updated": "2025-11-09"
     }
   ]
 }
