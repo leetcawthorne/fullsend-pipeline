@@ -28,7 +28,7 @@ include:
   - _posts
   - assets
   - assets/images
-  - systems/dvos/runtime/visual-profile.json
+  - assets/data/visual-profile.json
 
 # Ensure visual-profile.json is served as a static file
 defaults:
