@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ page.title }} | FullSend Passive V1</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="{{ site.baseurl }}{{ site.favicon }}" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="{{ site.baseurl }}/" class="brand">FullSend Passive V1</a>
+      <nav class="nav-links">
+        <a href="{{ site.baseurl }}/">Home</a>
+        <a href="{{ site.baseurl }}/about">About</a>
+        <a href="{{ site.baseurl }}/contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="content">
+    {{ content }}
+  </main>
+
+  <footer class="footer">
+    <p>© {{ site.time | date: "%Y" }} FullSend Automation — Powered by AI Pipelines</p>
+  </footer>
+
+  {% include dvos-visual.html %}
+</body>
+</html>
