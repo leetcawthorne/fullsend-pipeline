@@ -1,0 +1,13 @@
+{% assign dvos_visual = site.static_files | where: "path", "/systems/dvos/runtime/visual-profile.json" | first %}
+{% if dvos_visual %}
+  <script>
+    fetch("{{ dvos_visual.path }}")
+      .then(response => response.json())
+      .then(data => {
+        document.body.setAttribute("data-dvos-profile", data.profile);
+        document.body.style.backgroundImage = `url(${data.background_asset})`;
+        console.log("DVOS Visual Context Loaded:", data);
+      })
+      .catch(err => console.warn("DVOS Visual Load Failed:", err));
+  </script>
+{% endif %}
