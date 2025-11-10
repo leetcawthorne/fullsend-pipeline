@@ -1,5 +1,5 @@
 # DVOS Scheduler — Full Autonomous Runtime Cycle
-# Runs continuous DVOS system maintenance and healing
+# Runs continuous DVOS system maintenance, verification, and healing
 
 import time
 import json
@@ -10,6 +10,7 @@ from datetime import datetime
 from engine.analyzer import run_analysis
 from engine.integrity_verifier import verify_assets
 from engine.auto_healer import heal_assets
+from engine.dvos_auto_commit import git_commit_and_push, send_webhook_notification
 
 LOG_PATH = "systems/dvos/runtime/logs/asset-sync.log"
 
@@ -22,46 +23,66 @@ def log_cycle(message):
 
 
 def run_dvos_cycle():
-    """Run one full analysis → verification → healing cycle."""
+    """Run one full analysis → verification → healing → commit → notify cycle."""
+    start_time = time.time()
     log_cycle("Starting DVOS cycle.")
     print("\n🚀 [DVOS] Initiating full system cycle...")
 
-    # Step 1 — Analyze
-    result = run_analysis()
-    asset_count = len(result.get("assets", []))
-    log_cycle(f"Analyzer complete: {asset_count} assets found.")
+    cycle_data = {
+        "assets": 0,
+        "healed": 0,
+        "status": "ok",
+        "duration": "0s",
+        "commit": False
+    }
 
-    # Step 2 — Verify
-    mismatches = verify_assets()
-    if mismatches["status"] == "ok":
-        log_cycle("Integrity verified — all assets synchronized.")
-        print("✅ No mismatches detected.")
-    else:
-        log_cycle("Integrity issues found — initiating healing process.")
-        print("⚠️ Mismatches found, running auto-healer...")
-        repairs = heal_assets(mismatches)
-        log_cycle(f"Auto-healer applied {repairs} repairs.")
-
-    # 🔁 Step 3 — Auto Commit + Webhook Notification
     try:
-        from engine.dvos_auto_commit import git_commit_and_push, send_webhook_notification
+        # Step 1 — Analyze
+        result = run_analysis()
+        asset_count = len(result.get("assets", []))
+        cycle_data["assets"] = asset_count
+        log_cycle(f"Analyzer complete: {asset_count} assets found.")
 
+        # Step 2 — Verify
+        mismatches = verify_assets()
+        if mismatches["status"] == "ok":
+            log_cycle("Integrity verified — all assets synchronized.")
+            print("✅ No mismatches detected.")
+        else:
+            log_cycle("Integrity issues found — initiating healing process.")
+            print("⚠️ Mismatches found, running auto-healer...")
+            repairs = heal_assets(mismatches)
+            cycle_data["healed"] = repairs
+            cycle_data["status"] = "healed" if repairs else "issues"
+            log_cycle(f"Auto-healer applied {repairs} repairs.")
+
+        # Step 3 — Auto Commit
         commit_msg = f"DVOS automated cycle — {asset_count} assets processed"
         commit_status = git_commit_and_push(commit_msg)
+        cycle_data["commit"] = commit_status
+        log_cycle(f"Auto-commit {'successful' if commit_status else 'failed'}.")
 
-        summary = (
-            f"✅ DVOS cycle complete.\n"
-            f"Assets: {asset_count}\n"
-            f"Commit: {'Success' if commit_status else 'Failed'}"
-        )
-        send_webhook_notification(summary)
-
-        log_cycle("Auto-commit and webhook dispatch complete.")
     except Exception as e:
-        log_cycle(f"[ERROR] Auto-commit/webhook step failed: {e}")
+        log_cycle(f"[ERROR] DVOS cycle failure: {e}")
+        cycle_data["status"] = "error"
+
+    # Step 4 — Wrap up
+    cycle_data["duration"] = f"{time.time() - start_time:.2f}s"
+    summary = (
+        f"**DVOS Cycle Summary**\n"
+        f"- Assets Processed: {cycle_data['assets']}\n"
+        f"- Healed: {cycle_data['healed']}\n"
+        f"- Duration: {cycle_data['duration']}\n"
+        f"- Commit: {'✅ Success' if cycle_data['commit'] else '❌ Failed'}\n"
+        f"- Status: {cycle_data['status'].upper()}"
+    )
+
+    # Send webhook report
+    send_webhook_notification(summary, cycle_data)
 
     log_cycle("Cycle complete.")
     print("🟢 [DVOS] Cycle complete.\n")
+    return cycle_data
 
 
 def run_scheduler(interval_minutes=5):
