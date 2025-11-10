@@ -8,7 +8,7 @@ from datetime import datetime
 from random import uniform
 
 # Core DVOS modules
-from engine.registry_loader import DVOSRegistry
+from systems.dvos.engine.registry_loader import DVOSRegistry
 from engine.analyzer import run_analysis
 from engine.integrity_verifier import verify_assets
 from engine.auto_healer import heal_assets
