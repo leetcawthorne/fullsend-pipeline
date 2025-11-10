@@ -1,49 +1,65 @@
-# DVOS Runtime Scheduler
-# Automates repeated DVOS cycles at defined intervals
+# DVOS Scheduler — Full Autonomous Runtime Cycle
+# Runs continuous DVOS system maintenance and healing
 
 import time
-import threading
+import json
+import os
 from datetime import datetime
-from dvos_cycle import run_dvos_cycle
-from auto_healer import log_heal
 
-# --- CONFIGURATION ---------------------------------------------------------
+# Import core DVOS modules
+from engine.analyzer import run_analysis
+from engine.integrity_verifier import verify_assets
+from engine.auto_healer import heal_assets
 
-CYCLE_INTERVAL_HOURS = 6  # ⏱ how often to run full DVOS cycle
-CHECK_INTERVAL_SECONDS = 10  # how often to check for next run (lightweight)
-LOCK = threading.Lock()  # prevents overlapping runs
-
-# --- CORE SCHEDULER -------------------------------------------------------
-
-def run_scheduled_cycle():
-    """Runs a single DVOS cycle, ensuring no overlap."""
-    with LOCK:
-        start_time = datetime.utcnow().isoformat() + "Z"
-        log_heal(f"\n--- Scheduled DVOS Cycle Start @ {start_time} ---")
-        try:
-            run_dvos_cycle()
-        except Exception as e:
-            log_heal(f"[SCHEDULER ERROR] Cycle failed: {e}")
-        finally:
-            end_time = datetime.utcnow().isoformat() + "Z"
-            log_heal(f"--- DVOS Cycle Complete @ {end_time} ---\n")
+LOG_PATH = "systems/dvos/runtime/logs/asset-sync.log"
 
 
-def start_scheduler():
-    """Main runtime loop — executes DVOS cycles every X hours."""
-    log_heal(f"DVOS Scheduler started. Interval: {CYCLE_INTERVAL_HOURS} hours")
+def log_cycle(message):
+    """Append scheduler events to the runtime log."""
+    os.makedirs(os.path.dirname(LOG_PATH), exist_ok=True)
+    with open(LOG_PATH, "a") as log:
+        log.write(f"[{datetime.utcnow().isoformat()}Z] [CYCLE] {message}\n")
+
+
+def run_dvos_cycle():
+    """Run one full analysis → verification → healing cycle."""
+    log_cycle("Starting DVOS cycle.")
+    print("\n🚀 [DVOS] Initiating full system cycle...")
+
+    # Step 1 — Analyze
+    result = run_analysis()
+    asset_count = len(result.get("assets", []))
+    log_cycle(f"Analyzer complete: {asset_count} assets found.")
+
+    # Step 2 — Verify
+    mismatches = verify_assets()
+    if mismatches["status"] == "ok":
+        log_cycle("Integrity verified — all assets synchronized.")
+        print("✅ No mismatches detected.")
+    else:
+        log_cycle("Integrity issues found — initiating healing process.")
+        print("⚠️ Mismatches found, running auto-healer...")
+        repairs = heal_assets(mismatches)
+        log_cycle(f"Auto-healer applied {repairs} repairs.")
+
+    log_cycle("Cycle complete.")
+    print("🟢 [DVOS] Cycle complete.\n")
+
+
+def run_scheduler(interval_minutes=5):
+    """Run DVOS cycle continuously every given interval."""
+    log_cycle(f"Scheduler started — interval {interval_minutes} minutes.")
+    print(f"[DVOS Scheduler] Running every {interval_minutes} min.\n")
 
     while True:
-        next_run_time = datetime.utcnow().timestamp() + (CYCLE_INTERVAL_HOURS * 3600)
+        run_dvos_cycle()
+        log_cycle(f"Sleeping for {interval_minutes} minutes.")
+        time.sleep(interval_minutes * 60)
 
-        run_scheduled_cycle()
-
-        # Sleep until next scheduled run
-        while datetime.utcnow().timestamp() < next_run_time:
-            time.sleep(CHECK_INTERVAL_SECONDS)
-
-# --- ENTRY POINT -----------------------------------------------------------
 
 if __name__ == "__main__":
-    log_heal("--- Initializing DVOS Runtime Scheduler ---")
-    start_scheduler()
+    try:
+        run_scheduler(interval_minutes=5)
+    except KeyboardInterrupt:
+        log_cycle("Scheduler stopped manually.")
+        print("\n🟥 DVOS Scheduler stopped.")
