@@ -1,10 +1,12 @@
 # DVOS Auto Commit & Webhook System
 # Reads configuration directly from registry.json for full automation
+# Supports multiple webhook endpoints and resilient event delivery
 
 import os
 import json
 import subprocess
 import requests
+import time
 from datetime import datetime
 
 REGISTRY_PATH = "systems/dvos/schema/registry.json"
@@ -36,6 +38,12 @@ def git_commit_and_push(commit_message):
         return False
 
     try:
+        # Check for pending changes
+        result = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
+        if not result.stdout.strip():
+            log_event("No Git changes detected. Skipping commit.")
+            return True
+
         subprocess.run(["git", "add", "-A"], check=True)
         subprocess.run(["git", "commit", "-m", commit_message], check=True)
         subprocess.run(["git", "push", "origin", branch], check=True)
@@ -44,35 +52,37 @@ def git_commit_and_push(commit_message):
     except subprocess.CalledProcessError as e:
         log_event(f"[ERROR] Git operation failed: {e}")
         return False
+    except Exception as e:
+        log_event(f"[CRITICAL] Unexpected Git error: {e}")
+        return False
 
 
 def send_webhook_notification(summary, cycle_data=None):
     """
-    Send a rich Discord webhook notification with DVOS cycle details.
-    cycle_data can include:
-    {
-        "assets": int,
-        "healed": int,
-        "status": "ok" | "issues" | "healed" | "error",
-        "duration": "5.2s",
-        "commit": True
-    }
+    Send webhook notification(s) with DVOS cycle details.
+    Supports multiple webhook URLs (Discord, Slack, etc.)
     """
     registry = load_registry()
     notify_config = registry.get("notifications", {})
-    webhook_url = notify_config.get("webhook_url")
-    notify_on = notify_config.get("notify_on", [])
+    webhook_urls = notify_config.get("webhook_url")
 
-    if not webhook_url:
-        log_event("No webhook URL found in registry.")
+    # Allow either a single string or list of URLs
+    if isinstance(webhook_urls, str):
+        webhook_urls = [webhook_urls]
+
+    if not webhook_urls:
+        log_event("No webhook URLs found in registry.")
         return False
 
-    # Determine if this notification type should be sent
-    if not any(event in summary.lower() for event in notify_on):
+    notify_on = [n.lower() for n in notify_config.get("notify_on", [])]
+
+    # Skip if this event type is not in allowed list
+    event_name = (cycle_data or {}).get("status", "cycle_complete").lower()
+    if not any(k in event_name or k in summary.lower() for k in notify_on):
         log_event("Webhook not triggered — event type not in notify_on list.")
         return False
 
-    # Color coding by status
+    # Color mapping by status
     color_map = {
         "ok": 0x57F287,       # ✅ green
         "issues": 0xFAA61A,   # ⚠️ yellow
@@ -83,7 +93,7 @@ def send_webhook_notification(summary, cycle_data=None):
     status = (cycle_data or {}).get("status", "ok")
     color = color_map.get(status, 0x5865F2)
 
-    # Build rich embed
+    # Dynamic fields for visual embed
     fields = []
     if cycle_data:
         fields.extend([
@@ -107,14 +117,31 @@ def send_webhook_notification(summary, cycle_data=None):
         ]
     }
 
-    try:
-        response = requests.post(webhook_url, json=payload)
-        if response.status_code in [200, 204]:
-            log_event("Webhook notification sent successfully.")
-            return True
-        else:
-            log_event(f"[WARN] Webhook returned {response.status_code}")
+    def send_once(url):
+        try:
+            r = requests.post(url, json=payload, timeout=10)
+            if r.status_code in [200, 204]:
+                return True
+            log_event(f"[WARN] Webhook {url[:40]}... returned {r.status_code}")
             return False
-    except Exception as e:
-        log_event(f"[ERROR] Webhook dispatch failed: {e}")
-        return False
+        except Exception as e:
+            log_event(f"[ERROR] Webhook dispatch failed: {e}")
+            return False
+
+    success = False
+    for url in webhook_urls:
+        # First attempt
+        if send_once(url):
+            log_event(f"Webhook notification sent successfully → {url[:50]}...")
+            success = True
+            continue
+        # Retry once after delay
+        log_event(f"Retrying webhook to {url[:40]}...")
+        time.sleep(3)
+        if send_once(url):
+            log_event(f"Webhook retry succeeded → {url[:50]}...")
+            success = True
+        else:
+            log_event(f"[FAIL] Webhook permanently failed → {url[:50]}...")
+
+    return success
