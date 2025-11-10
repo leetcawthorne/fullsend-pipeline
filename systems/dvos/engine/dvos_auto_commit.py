@@ -46,8 +46,18 @@ def git_commit_and_push(commit_message):
         return False
 
 
-def send_webhook_notification(summary):
-    """Send webhook notification with DVOS cycle summary."""
+def send_webhook_notification(summary, cycle_data=None):
+    """
+    Send a rich Discord webhook notification with DVOS cycle details.
+    cycle_data can include:
+    {
+        "assets": int,
+        "healed": int,
+        "status": "ok" | "issues" | "healed" | "error",
+        "duration": "5.2s",
+        "commit": True
+    }
+    """
     registry = load_registry()
     notify_config = registry.get("notifications", {})
     webhook_url = notify_config.get("webhook_url")
@@ -57,18 +67,41 @@ def send_webhook_notification(summary):
         log_event("No webhook URL found in registry.")
         return False
 
-    # Only send if this type of event is configured
+    # Determine if this notification type should be sent
     if not any(event in summary.lower() for event in notify_on):
         log_event("Webhook not triggered — event type not in notify_on list.")
         return False
+
+    # Color coding by status
+    color_map = {
+        "ok": 0x57F287,       # ✅ green
+        "issues": 0xFAA61A,   # ⚠️ yellow
+        "healed": 0x5865F2,   # 🔧 blue
+        "error": 0xED4245     # 🟥 red
+    }
+
+    status = (cycle_data or {}).get("status", "ok")
+    color = color_map.get(status, 0x5865F2)
+
+    # Build rich embed
+    fields = []
+    if cycle_data:
+        fields.extend([
+            {"name": "🧩 Assets Processed", "value": str(cycle_data.get("assets", 0)), "inline": True},
+            {"name": "🩹 Healed", "value": str(cycle_data.get("healed", 0)), "inline": True},
+            {"name": "⏱ Duration", "value": str(cycle_data.get("duration", "n/a")), "inline": True},
+            {"name": "📦 Commit", "value": "✅ Yes" if cycle_data.get("commit") else "❌ No", "inline": True},
+            {"name": "📊 Status", "value": status.upper(), "inline": True}
+        ])
 
     payload = {
         "username": "DVOS Notifier",
         "embeds": [
             {
-                "title": "DVOS Cycle Report",
+                "title": "DVOS System Cycle Report",
                 "description": summary,
-                "color": 5814783,
+                "color": color,
+                "fields": fields,
                 "footer": {"text": f"Full Send • {datetime.utcnow().isoformat()}Z"}
             }
         ]
@@ -76,7 +109,7 @@ def send_webhook_notification(summary):
 
     try:
         response = requests.post(webhook_url, json=payload)
-        if response.status_code == 204 or response.status_code == 200:
+        if response.status_code in [200, 204]:
             log_event("Webhook notification sent successfully.")
             return True
         else:
