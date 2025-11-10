@@ -35,7 +35,7 @@ def load_visual_profile():
         "timestamp": datetime.utcnow().isoformat() + "Z"
     }
 
-    asset_sources = registry.get("asset_sources", [])
+    asset_sources = registry.get("asset_sources", [ASSET_BASE_PATH])
     assets = []
 
     for folder in asset_sources:
@@ -75,6 +75,28 @@ def load_visual_profile():
     return visual_context
 
 
+def preview_visual_context(context):
+    """Generate an ASCII preview of the current visual context."""
+    print("\n🧩 [DVOS VISUAL PREVIEW]")
+    print("=" * 60)
+    print(f"Profile:           {context['profile']}")
+    print(f"Theme Alignment:   {context['theme_alignment']}")
+    print(f"Optimization Mode: {context['optimization_level']}")
+    print("-" * 60)
+    bg = context.get("background_asset") or "❌ No background assigned"
+    print(f"🎨 Background:     {bg}")
+    print("-" * 60)
+    if context["ui_elements"]:
+        print("🧱 UI Elements:")
+        for i, ui in enumerate(context["ui_elements"], 1):
+            print(f"   {i}. {ui}")
+    else:
+        print("🧱 UI Elements:    ❌ None assigned")
+    print("=" * 60)
+    print(f"Last Updated: {context['timestamp']}")
+    print("")
+
+
 def apply_visual_context():
     """Activate and log current aesthetic context."""
     context = load_visual_profile()
@@ -85,6 +107,8 @@ def apply_visual_context():
     print(f"Background: {context['background_asset'] or 'None'}")
     print(f"UI Elements: {len(context['ui_elements'])}")
     print(f"Updated: {context['timestamp']}\n")
+
+    preview_visual_context(context)
     return context
 
 
