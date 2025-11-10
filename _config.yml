@@ -28,6 +28,7 @@ include:
   - _posts
   - assets
   - assets/images
+  - systems/dvos/runtime/visual-profile.json
 
 # Branding
 logo: /assets/images/fullsend-logo.png
