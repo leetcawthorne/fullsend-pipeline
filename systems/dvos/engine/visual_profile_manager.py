@@ -5,7 +5,7 @@
 import json
 import os
 from datetime import datetime
-from engine.registry_loader import DVOSRegistry
+from systems.dvos.engine.registry_loader import DVOSRegistry
 
 ASSET_BASE_PATH = "systems/dvos/assets/"
 PROFILE_CACHE_PATH = "systems/dvos/runtime/visual-profile.json"
