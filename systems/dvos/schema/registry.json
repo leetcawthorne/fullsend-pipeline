@@ -7,10 +7,10 @@
   "last_sync": "2025-11-10T00:00:00Z",
 
   "asset_sources": [
-    "assets/backgrounds",
-    "assets/logo",
-    "assets/posts",
-    "assets/ui"
+    "systems/dvos/assets/backgrounds",
+    "systems/dvos/assets/logo",
+    "systems/dvos/assets/posts",
+    "systems/dvos/assets/ui"
   ],
 
   "runtime": {
