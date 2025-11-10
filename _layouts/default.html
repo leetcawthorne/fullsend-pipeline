@@ -14,8 +14,27 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
-
 <body>
+  {% assign visual_profile = site.static_files | where: "path", "/systems/dvos/runtime/visual_profile.json" | first %}
+  {% if visual_profile %}
+    <script>
+      fetch("{{ visual_profile.path }}")
+        .then(response => response.json())
+        .then(data => {
+          console.log("✅ Visual Profile Loaded:", data);
+          document.body.dataset.theme = data.theme_alignment;
+
+          // Optional: auto-apply background if defined
+          if (data.background_asset) {
+            document.body.style.backgroundImage = `url(${data.background_asset})`;
+            document.body.style.backgroundSize = "cover";
+            document.body.style.backgroundRepeat = "no-repeat";
+          }
+        })
+        .catch(error => console.error("⚠️ Visual Profile Load Error:", error));
+    </script>
+  {% endif %}
+
   <header class="site-header">
     <div class="nav-container">
       <a href="{{ site.baseurl }}/" class="brand">FullSend Passive V1</a>
