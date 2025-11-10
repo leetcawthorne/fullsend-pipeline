@@ -3,8 +3,8 @@
   "system": "DVOS",
   "visual_profile": "Energetic Creator",
   "maintainer": "Automated Visual Engine",
-  "version": "1.5",
-  "last_sync": "2025-11-09T00:00:00Z",
+  "version": "1.6",
+  "last_sync": "2025-11-10T00:00:00Z",
 
   "asset_sources": [
     "assets/backgrounds",
@@ -17,23 +17,35 @@
     "compiled_output": "runtime/merged-asset-map.json",
     "sync_mode": "auto",
     "validation_schema": "schema/asset-map.json",
-    "log_path": "runtime/logs/asset-sync.log"
+    "log_path": "runtime/logs/asset-sync.log",
+    "auto_heal": true,
+    "auto_cycle_interval": "5m"
   },
 
   "notifications": {
-    "webhook_url": "https://discord.com/api/webhooks/XXXX/XXXX",
-    "notify_on": ["heal", "commit", "cycle_complete"]
+    "webhook_url": [
+      "https://discord.com/api/webhooks/XXXX/XXXX",
+      "https://hooks.slack.com/services/YYYY/YYYY/YYYY"
+    ],
+    "notify_on": ["heal", "commit", "cycle_complete", "error"],
+    "retry_on_fail": true,
+    "embed_style": "rich",
+    "username": "DVOS Notifier"
   },
 
   "repo": {
     "auto_commit": true,
-    "branch": "main"
+    "branch": "main",
+    "commit_prefix": "[DVOS]",
+    "commit_log_limit": 50
   },
 
   "metadata": {
     "theme_alignment": "dark-light adaptive",
     "optimization_level": "full",
     "auto_validation": true,
-    "registry_integrity": "verified"
+    "registry_integrity": "verified",
+    "system_health": "stable",
+    "last_heal_check": "2025-11-09T23:58:00Z"
   }
 }
