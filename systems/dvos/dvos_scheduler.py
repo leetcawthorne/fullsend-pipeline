@@ -1,6 +1,6 @@
 # DVOS Scheduler — Fully Adaptive Runtime (DVOS v1.6)
 # Integrates dynamic interval, webhook, and repo logic from registry.json
-# Supports live configuration reload + fault-tolerant recovery
+# Supports live configuration reload, fault-tolerant recovery, and visual context sync
 
 import time
 import os
@@ -13,6 +13,7 @@ from engine.analyzer import run_analysis
 from engine.integrity_verifier import verify_assets
 from engine.auto_healer import heal_assets
 from engine.dvos_auto_commit import git_commit_and_push, send_webhook_notification
+from engine.visual_profile_manager import apply_visual_context   # ✅ NEW
 
 LOG_PATH = "systems/dvos/runtime/logs/asset-sync.log"
 
@@ -58,6 +59,11 @@ def run_dvos_cycle():
     }
 
     try:
+        # Step 0 — Apply visual context (themes, presets, metadata)
+        apply_visual_context()
+        log_cycle("Visual profile context applied.")
+        print("🎨 Visual context loaded from registry and presets.")
+
         # Step 1 — Analyze
         result = run_analysis()
         asset_count = len(result.get("assets", []))
@@ -70,7 +76,8 @@ def run_dvos_cycle():
             log_cycle("Integrity verified — all assets synchronized.")
             print("✅ No mismatches detected.")
         else:
-            auto_heal_enabled = DVOSRegistry.get("runtime.auto_heal", True)
+            runtime_config = DVOSRegistry.get_runtime()
+            auto_heal_enabled = runtime_config.get("auto_heal", True)
             if auto_heal_enabled:
                 log_cycle("Integrity issues found — initiating healing process.")
                 print("⚠️ Mismatches found, running auto-healer...")
@@ -83,7 +90,8 @@ def run_dvos_cycle():
                 cycle_data["status"] = "issues"
 
         # Step 3 — Auto Commit (with retry logic)
-        commit_prefix = DVOSRegistry.get("repo.commit_prefix", "[DVOS]")
+        repo_config = DVOSRegistry.get_repo_config()
+        commit_prefix = repo_config.get("commit_prefix", "[DVOS]")
         commit_msg = f"{commit_prefix} Automated cycle — {asset_count} assets processed"
         commit_status = exponential_backoff_retry(git_commit_and_push, 3, 4, commit_msg)
         cycle_data["commit"] = commit_status
