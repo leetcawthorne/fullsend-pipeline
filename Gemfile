@@ -1,12 +1,13 @@
 source "https://rubygems.org"
 
-ruby ">= 3.3.0"
+ruby ">= 3.4.0"
 
 gem "jekyll", "~> 4.3.3"
 
-# Ruby 3.3+ removed stdlib components
+# Ruby standard library gems removed in Ruby 3.4+
 gem "csv"
 gem "logger"
+gem "base64"
 
 group :jekyll_plugins do
   gem "jekyll-feed", "~> 0.17"
