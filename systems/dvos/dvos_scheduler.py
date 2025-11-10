@@ -1,12 +1,14 @@
-# DVOS Scheduler — Full Autonomous Runtime Cycle
+# DVOS Scheduler — Fault-Tolerant Full Autonomous Runtime Cycle
 # Runs continuous DVOS system maintenance, verification, and healing
+# With auto-retry recovery for Git + Webhook steps
 
 import time
 import json
 import os
 from datetime import datetime
+from random import uniform
 
-# Import core DVOS modules
+# Core DVOS modules
 from engine.analyzer import run_analysis
 from engine.integrity_verifier import verify_assets
 from engine.auto_healer import heal_assets
@@ -20,6 +22,28 @@ def log_cycle(message):
     os.makedirs(os.path.dirname(LOG_PATH), exist_ok=True)
     with open(LOG_PATH, "a") as log:
         log.write(f"[{datetime.utcnow().isoformat()}Z] [CYCLE] {message}\n")
+
+
+def exponential_backoff_retry(func, max_retries=3, base_delay=3, *args, **kwargs):
+    """
+    Retry wrapper with exponential backoff for resilience.
+    Retries the function if it returns False or raises an exception.
+    """
+    for attempt in range(1, max_retries + 1):
+        try:
+            result = func(*args, **kwargs)
+            if result:
+                return True
+            else:
+                log_cycle(f"[WARN] Attempt {attempt}/{max_retries} failed — retrying...")
+        except Exception as e:
+            log_cycle(f"[ERROR] Attempt {attempt}/{max_retries} threw exception: {e}")
+        # Wait with backoff + jitter
+        delay = base_delay * (2 ** (attempt - 1)) + uniform(0, 1.5)
+        log_cycle(f"Retrying in {delay:.1f}s...")
+        time.sleep(delay)
+    log_cycle("[FAIL] All retries exhausted.")
+    return False
 
 
 def run_dvos_cycle():
@@ -56,17 +80,17 @@ def run_dvos_cycle():
             cycle_data["status"] = "healed" if repairs else "issues"
             log_cycle(f"Auto-healer applied {repairs} repairs.")
 
-        # Step 3 — Auto Commit
+        # Step 3 — Auto Commit with retry logic
         commit_msg = f"DVOS automated cycle — {asset_count} assets processed"
-        commit_status = git_commit_and_push(commit_msg)
+        commit_status = exponential_backoff_retry(git_commit_and_push, 3, 4, commit_msg)
         cycle_data["commit"] = commit_status
-        log_cycle(f"Auto-commit {'successful' if commit_status else 'failed'}.")
+        log_cycle(f"Auto-commit {'successful' if commit_status else 'failed after retries'}.")
 
     except Exception as e:
-        log_cycle(f"[ERROR] DVOS cycle failure: {e}")
+        log_cycle(f"[CRITICAL] DVOS cycle failure: {e}")
         cycle_data["status"] = "error"
 
-    # Step 4 — Wrap up
+    # Step 4 — Wrap up and send webhook (with retry)
     cycle_data["duration"] = f"{time.time() - start_time:.2f}s"
     summary = (
         f"**DVOS Cycle Summary**\n"
@@ -77,8 +101,7 @@ def run_dvos_cycle():
         f"- Status: {cycle_data['status'].upper()}"
     )
 
-    # Send webhook report
-    send_webhook_notification(summary, cycle_data)
+    exponential_backoff_retry(send_webhook_notification, 3, 5, summary, cycle_data)
 
     log_cycle("Cycle complete.")
     print("🟢 [DVOS] Cycle complete.\n")
@@ -91,9 +114,14 @@ def run_scheduler(interval_minutes=5):
     print(f"[DVOS Scheduler] Running every {interval_minutes} min.\n")
 
     while True:
-        run_dvos_cycle()
-        log_cycle(f"Sleeping for {interval_minutes} minutes.")
-        time.sleep(interval_minutes * 60)
+        start = time.time()
+        cycle_data = run_dvos_cycle()
+
+        # Adjust sleep if cycle took longer than expected
+        elapsed = time.time() - start
+        remaining = max((interval_minutes * 60) - elapsed, 5)
+        log_cycle(f"Sleeping for {remaining:.1f}s before next cycle.")
+        time.sleep(remaining)
 
 
 if __name__ == "__main__":
