@@ -8,6 +8,7 @@ gem "jekyll", "~> 4.3.3"
 gem "csv"
 gem "logger"
 gem "base64"
+gem "tzinfo"
 
 group :jekyll_plugins do
   gem "jekyll-feed", "~> 0.17"
