@@ -42,6 +42,24 @@ def run_dvos_cycle():
         repairs = heal_assets(mismatches)
         log_cycle(f"Auto-healer applied {repairs} repairs.")
 
+    # 🔁 Step 3 — Auto Commit + Webhook Notification
+    try:
+        from engine.dvos_auto_commit import git_commit_and_push, send_webhook_notification
+
+        commit_msg = f"DVOS automated cycle — {asset_count} assets processed"
+        commit_status = git_commit_and_push(commit_msg)
+
+        summary = (
+            f"✅ DVOS cycle complete.\n"
+            f"Assets: {asset_count}\n"
+            f"Commit: {'Success' if commit_status else 'Failed'}"
+        )
+        send_webhook_notification(summary)
+
+        log_cycle("Auto-commit and webhook dispatch complete.")
+    except Exception as e:
+        log_cycle(f"[ERROR] Auto-commit/webhook step failed: {e}")
+
     log_cycle("Cycle complete.")
     print("🟢 [DVOS] Cycle complete.\n")
 
