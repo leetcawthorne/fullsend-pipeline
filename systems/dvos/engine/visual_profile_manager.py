@@ -7,7 +7,7 @@ import os
 from datetime import datetime
 from engine.registry_loader import DVOSRegistry
 
-ASSET_BASE_PATH = "assets/"
+ASSET_BASE_PATH = "systems/dvos/assets/"
 PROFILE_CACHE_PATH = "systems/dvos/runtime/visual-profile.json"
 LOG_PATH = "systems/dvos/runtime/logs/asset-sync.log"
 
@@ -35,9 +35,9 @@ def load_visual_profile():
         "timestamp": datetime.utcnow().isoformat() + "Z"
     }
 
-    # Load all asset descriptors under assets/
     asset_sources = registry.get("asset_sources", [])
     assets = []
+
     for folder in asset_sources:
         if not os.path.exists(folder):
             log_visual_event(f"[WARN] Missing asset source: {folder}")
@@ -48,11 +48,11 @@ def load_visual_profile():
                     try:
                         with open(os.path.join(root, file), "r") as f:
                             data = json.load(f)
+                            data["path"] = os.path.normpath(data.get("path", "")).replace("\\", "/")
                             assets.append(data)
                     except Exception as e:
                         log_visual_event(f"[ERROR] Failed to load asset {file}: {e}")
 
-    # Assign key visual assets
     for a in assets:
         if a.get("style") == profile_name:
             if "background" in a.get("category", ""):
@@ -60,7 +60,13 @@ def load_visual_profile():
             elif "ui" in a.get("category", ""):
                 visual_context["ui_elements"].append(a["path"])
 
-    # Save cache
+    # Fallback: choose first available background if none matched
+    if not visual_context["background_asset"]:
+        for a in assets:
+            if a.get("category") == "background":
+                visual_context["background_asset"] = a["path"]
+                break
+
     os.makedirs(os.path.dirname(PROFILE_CACHE_PATH), exist_ok=True)
     with open(PROFILE_CACHE_PATH, "w") as f:
         json.dump(visual_context, f, indent=2)
