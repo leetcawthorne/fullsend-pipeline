@@ -5,18 +5,31 @@
   "maintainer": "Automated Visual Engine",
   "version": "1.5",
   "last_sync": "2025-11-09T00:00:00Z",
+
   "asset_sources": [
     "assets/backgrounds",
     "assets/logo",
     "assets/posts",
     "assets/ui"
   ],
+
   "runtime": {
     "compiled_output": "runtime/merged-asset-map.json",
     "sync_mode": "auto",
     "validation_schema": "schema/asset-map.json",
     "log_path": "runtime/logs/asset-sync.log"
   },
+
+  "notifications": {
+    "webhook_url": "https://discord.com/api/webhooks/XXXX/XXXX",
+    "notify_on": ["heal", "commit", "cycle_complete"]
+  },
+
+  "repo": {
+    "auto_commit": true,
+    "branch": "main"
+  },
+
   "metadata": {
     "theme_alignment": "dark-light adaptive",
     "optimization_level": "full",
