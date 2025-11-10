@@ -11,6 +11,9 @@ gem "base64"
 gem "tzinfo"
 gem "tzinfo-data"
 
+# Windows file watching (optional but recommended)
+gem "wdm", ">= 0.1.0", platforms: [:mingw, :x64_mingw, :mswin]
+
 group :jekyll_plugins do
   gem "jekyll-feed", "~> 0.17"
   gem "jekyll-seo-tag", "~> 2.8"
