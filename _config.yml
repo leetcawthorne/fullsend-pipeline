@@ -28,7 +28,15 @@ include:
   - _posts
   - assets
   - assets/images
-  - systems/dvos/
+  - systems/dvos/runtime/visual-profile.json
+
+# Ensure visual-profile.json is served as a static file
+defaults:
+  - scope:
+      path: "systems/dvos/runtime"
+    values:
+      layout: null
+      permalink: /systems/dvos/runtime/:name.json
 
 # Branding
 logo: /assets/images/fullsend-logo.png
