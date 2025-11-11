@@ -64,3 +64,6 @@ sass:
 collections:
   posts:
     output: true
+  dvos: 
+    output: true
+    permalink: /systems/dvos/:path/
