@@ -8,19 +8,19 @@
    Homepage & global styles
    ======================== */
 
-/* Target the logo inside the header */
+/* Header logo */
 .site-header img#site-logo {
-  max-width: 200px;   /* adjust as needed */
-  width: auto;        /* maintain aspect ratio */
-  height: auto;       /* maintain aspect ratio */
+  max-width: 150px;   /* reduces the logo width */
+  width: auto;
+  height: auto;
   display: block;
 }
 
-/* Latest posts list */
+/* Article items background */
 .post-list li {
-  background-image: url('/assets/images/grid-light.png'); /* tiled grid */
+  background-image: url('{{ "/assets/images/grid-light.png" | relative_url }}');
   background-repeat: repeat;
-  background-size: auto;        /* preserve original pattern */
+  background-size: auto;
   padding: 1rem;
   margin-bottom: 1rem;
   border-radius: 0.5rem;
