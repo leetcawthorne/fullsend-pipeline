@@ -57,8 +57,13 @@
       // 2️⃣ Apply logo dynamically if present
       const logoElement = document.querySelector('img#site-logo');
       {% if page.logo %}
-        if (logoElement) logoElement.src = "{{ page.logo | relative_url }}";
+      if (logoElement) {
+        logoElement.src = "{{ page.logo | relative_url }}";
+        logoElement.style.maxWidth = "200px";
+        logoElement.style.height = "auto";
+      }
       {% endif %}
+
 
       // 3️⃣ Store theme and button assets for JS
       window.dvosThemes = {
