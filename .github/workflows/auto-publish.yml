@@ -30,7 +30,7 @@ jobs:
       # 3️⃣ Run Full Send content generator
       - name: ⚙️ Generate Full Send content
         run: |
-          python fullsend-pipeline/generate_content.py
+          python systems/dvos/engine/generate_content.py
           echo "✅ Content generated successfully."
 
       # 4️⃣ Commit generated posts (_posts and _dvos)
