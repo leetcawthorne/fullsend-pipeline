@@ -4,30 +4,77 @@
 
 @use "fullsend" as *;
 
-/* ========================
-   Homepage & global styles
-   ======================== */
+/* ==========================
+   Global / Homepage Styles
+   ========================== */
 
-/* Header logo */
+/* Site logo */
 .site-header img#site-logo {
-  max-width: 150px;   /* reduces the logo width */
-  width: auto;
-  height: auto;
+  max-width: 150px;   /* limits logo width */
+  width: auto;        /* maintain aspect ratio */
+  height: auto;       /* maintain aspect ratio */
   display: block;
 }
 
-/* Article items background */
+/* Home container padding */
+.home-container {
+  padding: 2rem;
+}
+
+/* Latest posts section */
+.latest-posts {
+  margin-top: 3rem;
+}
+
+/* Article items (post list) */
 .post-list li {
-  background-image: url('{{ "/assets/images/grid-light.png" | relative_url }}');
+  background-image: url('{{ "/assets/images/grid-light.png" | relative_url }}'); /* tiled grid background */
   background-repeat: repeat;
   background-size: auto;
+  background-color: rgba(255,255,255,0.85); /* overlay for readability */
+  background-blend-mode: overlay;
   padding: 1rem;
   margin-bottom: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
 }
 
-/* Optional: add spacing inside home container */
-.home-container {
-  padding: 2rem;
+/* Hover effect for posts */
+.post-list li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Post titles */
+.post-list li a {
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+}
+
+.post-list li a:hover {
+  color: #FF4B2B; /* accent color on hover */
+}
+
+/* Post dates */
+.post-list li .post-date {
+  display: block;
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Optional: dark-mode adjustments */
+body.dark-mode .post-list li {
+  background-color: rgba(20,20,20,0.85);
+  color: #eee;
+}
+
+body.dark-mode .post-list li a {
+  color: #eee;
+}
+
+body.dark-mode .post-list li a:hover {
+  color: #FF6A3D;
 }
