@@ -25,6 +25,10 @@ url: "https://leetcawthorne.github.io"
 
 # Content folders
 include:
+  - systems/dvos/assets
+  - systems/dvos/ui
+  - systems/dvos/logo
+  - systems/dvos/presets
   - _posts
   - assets
   - assets/images
