@@ -17,29 +17,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout repo
       - name: 🧩 Checkout repository
         uses: actions/checkout@v4
 
+      # 2️⃣ Set up Python
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: ⚙️ Run Full Send Content Generator
+      # 3️⃣ Run Full Send content generator
+      - name: ⚙️ Generate Full Send content
         run: |
           python fullsend-pipeline/generate_content.py
           echo "✅ Content generated successfully."
 
-      - name: 🧾 Commit and push new post
+      # 4️⃣ Commit generated posts (_posts and _dvos)
+      - name: 📝 Commit new posts
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add _posts/*.md || echo "No new posts to commit."
-          git commit -m "📝 Auto-generated daily post" || echo "No changes to commit."
+          git add _posts/*.md _dvos/*.md || echo "No new posts to commit."
+          git commit -m "📝 Auto-generated content" || echo "No changes to commit."
           git push
 
-      - name: 🌐 Build and deploy to GitHub Pages
+      # 5️⃣ Prepare site for GitHub Pages
+      - name: 🌐 Build site for deployment
+        run: |
+          mkdir -p public
+          cp -r _site/* public/ || echo "_site folder empty, copying generated content instead."
+          cp -r _posts public/_posts || true
+          cp -r _dvos public/_dvos || true
+          touch public/.nojekyll
+
+      # 6️⃣ Deploy to GitHub Pages
+      - name: 🚀 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
+          publish_dir: ./public
+
+      # 7️⃣ Done
+      - name: ✅ Deployment complete
+        run: echo "Full Send Passive V1 deployed successfully!"
