@@ -29,6 +29,7 @@ include:
   - systems/dvos/ui
   - systems/dvos/logo
   - systems/dvos/presets
+  - systems/dvos/data
   - _posts
   - assets
   - assets/images
