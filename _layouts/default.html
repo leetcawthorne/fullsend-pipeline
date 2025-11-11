@@ -15,25 +15,37 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
-  {% assign visual_profile = site.static_files | where: "path", "/systems/dvos/runtime/visual_profile.json" | first %}
-  {% if visual_profile %}
-    <script>
-      fetch("{{ visual_profile.path }}")
-        .then(response => response.json())
-        .then(data => {
-          console.log("✅ Visual Profile Loaded:", data);
-          document.body.dataset.theme = data.theme_alignment;
+  <script>
+    fetch("{{ '/assets/data/visual-profile.json' | relative_url }}")
+      .then(response => {
+        if (!response.ok) throw new Error("Visual profile not found");
+        return response.json();
+      })
+      .then(data => {
+        console.log("✅ Visual Profile Loaded:", data);
 
-          // Optional: auto-apply background if defined
-          if (data.background_asset) {
-            document.body.style.backgroundImage = `url(${data.background_asset})`;
-            document.body.style.backgroundSize = "cover";
-            document.body.style.backgroundRepeat = "no-repeat";
-          }
-        })
-        .catch(error => console.error("⚠️ Visual Profile Load Error:", error));
-    </script>
-  {% endif %}
+        // Apply theme mode
+        if (data.theme_alignment && data.theme_alignment.includes("dark")) {
+          document.body.classList.add("dark-mode");
+        } else {
+          document.body.classList.remove("dark-mode");
+        }
+
+        // Apply background
+        if (data.background_asset) {
+          document.body.style.backgroundImage = `url('{{ site.baseurl }}${data.background_asset}')`;
+          document.body.style.backgroundSize = "cover";
+          document.body.style.backgroundPosition = "center";
+        }
+
+        // Accent colors (for profiles like “Energetic Creator”)
+        if (data.profile === "Energetic Creator") {
+          document.documentElement.style.setProperty('--accent-color', '#FF4B2B');
+          document.documentElement.style.setProperty('--accent-hover', '#FF6A3D');
+        }
+      })
+      .catch(error => console.error("⚠️ Visual Profile Load Error:", error));
+  </script>
 
   <header class="site-header">
     <div class="nav-container">
