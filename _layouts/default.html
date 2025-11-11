@@ -87,13 +87,6 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(data => {
         console.log("✅ Visual Profile Loaded:", data);
 
-        // Apply dark/light theme
-        if (data.theme_alignment && data.theme_alignment.includes("dark")) {
-          document.body.classList.add("dark-mode");
-        } else {
-          document.body.classList.remove("dark-mode");
-        }
-
         // Accent colors
         if (data.profile === "Energetic Creator") {
           document.documentElement.style.setProperty('--accent-color', '#FF4B2B');
