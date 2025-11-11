@@ -41,68 +41,82 @@
   </footer>
 
   <!-- DVOS Script -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // 1️⃣ Determine background
-      let bgPath;
-      {% if page.collection == "dvos" and page.background_asset %}
-        bgPath = "{{ page.background_asset | relative_url }}";
-      {% else %}
-        bgPath = "{{ '/assets/images/header-bg.jpg' | relative_url }}";
-      {% endif %}
-      document.body.style.backgroundImage = `url('${bgPath}')`;
-      document.body.style.backgroundSize = "cover";
-      document.body.style.backgroundPosition = "center";
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // 1️⃣ Determine page background
+  let bgPath;
+  {% if page.collection == "dvos" and page.background_asset %}
+    bgPath = "{{ page.background_asset | relative_url }}";
+  {% else %}
+    bgPath = "{{ '/assets/images/header-bg.jpg' | relative_url }}";
+  {% endif %}
+  document.body.style.backgroundImage = `url('${bgPath}')`;
+  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundPosition = "center";
 
-      // 2️⃣ Apply logo dynamically if present
-      const logoElement = document.querySelector('img#site-logo');
-      {% if page.logo %}
-      if (logoElement) {
-        logoElement.src = "{{ page.logo | relative_url }}";
-        logoElement.style.maxWidth = "200px";
-        logoElement.style.height = "auto";
-      }
-      {% endif %}
+  // 2️⃣ Apply logo dynamically
+  const logoElement = document.querySelector('img#site-logo');
+  {% if page.logo %}
+  if (logoElement) {
+    logoElement.src = "{{ page.logo | relative_url }}";
+    logoElement.style.maxWidth = "200px";
+    logoElement.style.height = "auto";
+  }
+  {% endif %}
 
+  // 3️⃣ Store theme and button assets for JS
+  window.dvosThemes = {
+    light: "{{ page.theme_light | relative_url }}",
+    dark: "{{ page.theme_dark | relative_url }}"
+  };
+  window.dvosButtons = {
+    primarySvg: "{{ page.button_primary_svg | relative_url }}",
+    secondarySvg: "{{ page.button_secondary_svg | relative_url }}",
+    primaryJson: "{{ page.button_primary_json | relative_url }}",
+    secondaryJson: "{{ page.button_secondary_json | relative_url }}"
+  };
+  window.visualProfilePath = "{{ page.visual_profile | relative_url }}";
 
-      // 3️⃣ Store theme and button assets for JS
-      window.dvosThemes = {
-        light: "{{ page.theme_light | relative_url }}",
-        dark: "{{ page.theme_dark | relative_url }}"
-      };
-      window.dvosButtons = {
-        primarySvg: "{{ page.button_primary_svg | relative_url }}",
-        secondarySvg: "{{ page.button_secondary_svg | relative_url }}",
-        primaryJson: "{{ page.button_primary_json | relative_url }}",
-        secondaryJson: "{{ page.button_secondary_json | relative_url }}"
-      };
-      window.visualProfilePath = "{{ page.visual_profile | relative_url }}";
+  // 4️⃣ Fetch visual profile JSON (if defined)
+  if (window.visualProfilePath) {
+    fetch(window.visualProfilePath)
+      .then(response => {
+        if (!response.ok) throw new Error("Visual profile not found");
+        return response.json();
+      })
+      .then(data => {
+        console.log("✅ Visual Profile Loaded:", data);
 
-      // 4️⃣ Fetch visual profile JSON (only if defined)
-      if (window.visualProfilePath) {
-        fetch(window.visualProfilePath)
-          .then(response => {
-            if (!response.ok) throw new Error("Visual profile not found");
-            return response.json();
-          })
-          .then(data => {
-            console.log("✅ Visual Profile Loaded:", data);
+        // Apply dark/light theme
+        if (data.theme_alignment && data.theme_alignment.includes("dark")) {
+          document.body.classList.add("dark-mode");
+        } else {
+          document.body.classList.remove("dark-mode");
+        }
 
-            if (data.theme_alignment && data.theme_alignment.includes("dark")) {
-              document.body.classList.add("dark-mode");
-            } else {
-              document.body.classList.remove("dark-mode");
-            }
+        // Accent colors
+        if (data.profile === "Energetic Creator") {
+          document.documentElement.style.setProperty('--accent-color', '#FF4B2B');
+          document.documentElement.style.setProperty('--accent-hover', '#FF6A3D');
+        }
+      })
+      .catch(error => console.warn("⚠️ Visual Profile Load Error:", error));
+  }
 
-            if (data.profile === "Energetic Creator") {
-              document.documentElement.style.setProperty('--accent-color', '#FF4B2B');
-              document.documentElement.style.setProperty('--accent-hover', '#FF6A3D');
-            }
-          })
-          .catch(error => console.warn("⚠️ Visual Profile Load Error:", error));
-      }
-    });
-  </script>
+  // 5️⃣ Apply grid-light.png background to article posts
+  const articleItems = document.querySelectorAll('.post-list li');
+  articleItems.forEach(item => {
+    item.style.backgroundImage = "url('{{ '/assets/images/grid-light.png' | relative_url }}')";
+    item.style.backgroundRepeat = "repeat";
+    item.style.backgroundSize = "auto";
+    item.style.backgroundColor = "rgba(255,255,255,0.85)"; // overlay for readability
+    item.style.borderRadius = "0.5rem";
+    item.style.padding = "1rem";
+    item.style.marginBottom = "1rem";
+    item.style.boxShadow = "0 2px 4px rgba(0,0,0,0.1)";
+  });
+});
+</script>
 
 </body>
 </html>
