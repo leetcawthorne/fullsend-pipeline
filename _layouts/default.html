@@ -7,7 +7,7 @@
       {% if page.collection == "dvos" and page.background_asset %}
         bgPath = "{{ page.background_asset | relative_url }}";
       {% else %}
-        bgPath = "{{ '/assets/backgrounds/default-bg.jpg' | relative_url }}";
+        bgPath = "{{ '/assets/backgrounds/header-bg.jpg' | relative_url }}";
       {% endif %}
       document.body.style.backgroundImage = `url('${bgPath}')`;
       document.body.style.backgroundSize = "cover";
