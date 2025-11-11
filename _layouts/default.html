@@ -1,5 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ page.title }} | FullSend Passive V1</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="{{ site.baseurl }}{{ site.favicon }}" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
 <body>
-  <!-- DVOS page assets -->
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="{{ site.baseurl }}/" class="brand">
+        <img id="site-logo" src="{{ site.logo | relative_url }}" alt="FullSend Logo" />
+      </a>
+      <nav class="nav-links">
+        <a href="{{ site.baseurl }}/">Home</a>
+        <a href="{{ site.baseurl }}/about">About</a>
+        <a href="{{ site.baseurl }}/contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page content -->
+  <main class="content">
+    {{ content }}
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© {{ site.time | date: "%Y" }} FullSend Automation — Powered by AI Pipelines</p>
+  </footer>
+
+  <!-- DVOS Script -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       // 1️⃣ Determine background
@@ -32,28 +73,31 @@
       };
       window.visualProfilePath = "{{ page.visual_profile | relative_url }}";
 
-      // 4️⃣ Fetch visual profile JSON
-      fetch(window.visualProfilePath)
-        .then(response => {
-          if (!response.ok) throw new Error("Visual profile not found");
-          return response.json();
-        })
-        .then(data => {
-          console.log("✅ Visual Profile Loaded:", data);
+      // 4️⃣ Fetch visual profile JSON (only if defined)
+      if (window.visualProfilePath) {
+        fetch(window.visualProfilePath)
+          .then(response => {
+            if (!response.ok) throw new Error("Visual profile not found");
+            return response.json();
+          })
+          .then(data => {
+            console.log("✅ Visual Profile Loaded:", data);
 
-          // Apply theme mode
-          if (data.theme_alignment && data.theme_alignment.includes("dark")) {
-            document.body.classList.add("dark-mode");
-          } else {
-            document.body.classList.remove("dark-mode");
-          }
+            if (data.theme_alignment && data.theme_alignment.includes("dark")) {
+              document.body.classList.add("dark-mode");
+            } else {
+              document.body.classList.remove("dark-mode");
+            }
 
-          // Accent colors for special profiles
-          if (data.profile === "Energetic Creator") {
-            document.documentElement.style.setProperty('--accent-color', '#FF4B2B');
-            document.documentElement.style.setProperty('--accent-hover', '#FF6A3D');
-          }
-        })
-        .catch(error => console.error("⚠️ Visual Profile Load Error:", error));
+            if (data.profile === "Energetic Creator") {
+              document.documentElement.style.setProperty('--accent-color', '#FF4B2B');
+              document.documentElement.style.setProperty('--accent-hover', '#FF6A3D');
+            }
+          })
+          .catch(error => console.warn("⚠️ Visual Profile Load Error:", error));
+      }
     });
   </script>
+
+</body>
+</html>
