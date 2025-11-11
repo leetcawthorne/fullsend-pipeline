@@ -1,6 +1,9 @@
 ---
 layout: home
 title: "FullSend Passive V1"
+background_asset: "/assets/images/header-bg.jpg"
+visual_profile: "/assets/data/visual-profile.json"
+logo: "/assets/images/fullsend-logo.png"
 ---
 
 <button class="theme-toggle" onclick="
