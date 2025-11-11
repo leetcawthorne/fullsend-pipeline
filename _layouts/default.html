@@ -16,6 +16,9 @@
 </head>
 <body>
   <script>
+    const data = {{ site.data.site_config | jsonify }};
+  </script>
+  <script>
     fetch("{{ '/assets/data/visual-profile.json' | relative_url }}")
       .then(response => {
         if (!response.ok) throw new Error("Visual profile not found");
