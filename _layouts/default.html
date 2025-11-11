@@ -1,83 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ page.title }} | FullSend Passive V1</title>
-
-  <!-- Favicon -->
-  <link rel="icon" href="{{ site.baseurl }}{{ site.favicon }}" />
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-</head>
 <body>
+  <!-- DVOS page assets -->
   <script>
-    const data = {{ site.data.site_config | jsonify }};
+    document.addEventListener("DOMContentLoaded", function () {
+      // 1️⃣ Determine background
+      let bgPath;
+      {% if page.collection == "dvos" and page.background_asset %}
+        bgPath = "{{ page.background_asset | relative_url }}";
+      {% else %}
+        bgPath = "{{ '/assets/backgrounds/default-bg.jpg' | relative_url }}";
+      {% endif %}
+      document.body.style.backgroundImage = `url('${bgPath}')`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center";
+
+      // 2️⃣ Apply logo dynamically if present
+      const logoElement = document.querySelector('img#site-logo');
+      {% if page.logo %}
+        if (logoElement) logoElement.src = "{{ page.logo | relative_url }}";
+      {% endif %}
+
+      // 3️⃣ Store theme and button assets for JS
+      window.dvosThemes = {
+        light: "{{ page.theme_light | relative_url }}",
+        dark: "{{ page.theme_dark | relative_url }}"
+      };
+      window.dvosButtons = {
+        primarySvg: "{{ page.button_primary_svg | relative_url }}",
+        secondarySvg: "{{ page.button_secondary_svg | relative_url }}",
+        primaryJson: "{{ page.button_primary_json | relative_url }}",
+        secondaryJson: "{{ page.button_secondary_json | relative_url }}"
+      };
+      window.visualProfilePath = "{{ page.visual_profile | relative_url }}";
+
+      // 4️⃣ Fetch visual profile JSON
+      fetch(window.visualProfilePath)
+        .then(response => {
+          if (!response.ok) throw new Error("Visual profile not found");
+          return response.json();
+        })
+        .then(data => {
+          console.log("✅ Visual Profile Loaded:", data);
+
+          // Apply theme mode
+          if (data.theme_alignment && data.theme_alignment.includes("dark")) {
+            document.body.classList.add("dark-mode");
+          } else {
+            document.body.classList.remove("dark-mode");
+          }
+
+          // Accent colors for special profiles
+          if (data.profile === "Energetic Creator") {
+            document.documentElement.style.setProperty('--accent-color', '#FF4B2B');
+            document.documentElement.style.setProperty('--accent-hover', '#FF6A3D');
+          }
+        })
+        .catch(error => console.error("⚠️ Visual Profile Load Error:", error));
+    });
   </script>
-  <script>
-    fetch("{{ '/assets/data/visual-profile.json' | relative_url }}")
-      .then(response => {
-        if (!response.ok) throw new Error("Visual profile not found");
-        return response.json();
-      })
-      .then(data => {
-        console.log("✅ Visual Profile Loaded:", data);
-
-        // Apply theme mode
-        if (data.theme_alignment && data.theme_alignment.includes("dark")) {
-          document.body.classList.add("dark-mode");
-        } else {
-          document.body.classList.remove("dark-mode");
-        }
-
-        // Apply background dynamically and safely
-          document.addEventListener("DOMContentLoaded", function () {
-        if (data && data.background_asset) {
-        // Use Jekyll's relative_url filter for reliable asset paths
-        const assetPath = "{{ data.background_asset | relative_url }}";
-          document.body.style.backgroundImage = `url('${assetPath}')`;
-          document.body.style.backgroundSize = "cover";
-          document.body.style.backgroundPosition = "center";
-        } else {
-        // Optional fallback: remove background or use a default one
-          console.warn("No valid background_asset found; applying default background.");
-          document.body.style.backgroundImage = `url('{{ '/assets/backgrounds/default-bg.jpg' | relative_url }}')`;
-          document.body.style.backgroundSize = "cover";
-          document.body.style.backgroundPosition = "center";
-        }
-
-        // Accent colors (for profiles like “Energetic Creator”)
-        if (data.profile === "Energetic Creator") {
-          document.documentElement.style.setProperty('--accent-color', '#FF4B2B');
-          document.documentElement.style.setProperty('--accent-hover', '#FF6A3D');
-        }
-      });
-      .catch(error => console.error("⚠️ Visual Profile Load Error:", error));
-  </script>
-
-  <header class="site-header">
-    <div class="nav-container">
-      <a href="{{ site.baseurl }}/" class="brand">FullSend Passive V1</a>
-      <nav class="nav-links">
-        <a href="{{ site.baseurl }}/">Home</a>
-        <a href="{{ site.baseurl }}/about">About</a>
-        <a href="{{ site.baseurl }}/contact">Contact</a>
-      </nav>
-    </div>
-  </header>
-
-  <main class="content">
-    {{ content }}
-  </main>
-
-  <footer class="footer">
-    <p>© {{ site.time | date: "%Y" }} FullSend Automation — Powered by AI Pipelines</p>
-  </footer>
-
-  {% include dvos-visual.html %}
-</body>
-</html>
