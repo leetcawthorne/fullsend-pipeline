@@ -64,17 +64,3 @@
   color: #666;
   margin-top: 0.25rem;
 }
-
-/* Optional: dark-mode adjustments */
-body.dark-mode .post-list li {
-  background-color: rgba(20,20,20,0.85);
-  color: #eee;
-}
-
-body.dark-mode .post-list li a {
-  color: #eee;
-}
-
-body.dark-mode .post-list li a:hover {
-  color: #FF6A3D;
-}
