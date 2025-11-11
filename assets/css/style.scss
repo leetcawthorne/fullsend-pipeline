@@ -8,10 +8,11 @@
    Homepage & global styles
    ======================== */
 
-/* Site logo */
-#site-logo {
-  max-width: 200px;   /* constrain large logo */
-  height: auto;
+/* Target the logo inside the header */
+.site-header img#site-logo {
+  max-width: 200px;   /* adjust as needed */
+  width: auto;        /* maintain aspect ratio */
+  height: auto;       /* maintain aspect ratio */
   display: block;
 }
 
