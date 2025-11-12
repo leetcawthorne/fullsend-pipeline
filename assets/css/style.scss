@@ -17,21 +17,33 @@
 }
 
 /* Navigation button icons */
-.nav-links a {
+.nav-links {
   display: flex;
-  align-items: center;
-  gap: 0.5rem; /* space between icon and text */
+  gap: 1rem; /* space between buttons */
 }
 
-.nav-links a img.nav-btn-icon {
-  width: 40px;
+.nav-btn {
+  display: inline-flex;         /* align icon + text */
+  align-items: center;          /* vertical center */
+  justify-content: center;      /* horizontal center inside button */
+  padding: 0.5rem 1rem;         /* button padding */
+  background-color: #FF4B2B;    /* button color */
+  color: #fff;                  /* text color */
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.nav-btn:hover {
+  background-color: #FF6A3D;
+  transform: translateY(-2px);
+}
+
+.nav-btn-icon {
+  width: 24px;
   height: 24px;
-  transition: transform 0.2 ease;
-}
-
-.nav-links a:hover img.nav-btn-icon {
-  transform: scale(1.1);
-  transition: transform 0.2s ease;
+  margin-right: 0.5rem; /* space between icon and text */
 }
 
 /* Home container padding */
