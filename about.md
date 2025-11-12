@@ -4,9 +4,9 @@ title: "About"
 permalink: /about/
 ---
 
-# About FullSend Passive V1
+# About FullSend Automation
 
-**FullSend Passive V1** is an automated AI-driven publishing system that researches trending niches, generates SEO-optimized articles, and deploys them daily using a fully server-free architecture.
+**FullSend Automation** is an automated AI-driven publishing system that researches trending niches, generates SEO-optimized articles, and deploys them daily using a fully server-free architecture.
 
 **Tech stack:**
 - Python for content generation  
