@@ -22,20 +22,21 @@
       <a href="{{ site.baseurl }}/" class="brand">
         <img id="site-logo" src="{{ site.logo | relative_url }}" alt="FullSend Logo" />
       </a>
-      <nav class="nav-links">
-        <a href="{{ site.baseurl }}/">
-          <img class="nav-btn-icon" src="{{ '/assets/ui/button-primary.svg' | relative_url }}" alt="Home Icon" />
-          <span>Home</span>
-        </a>
-        <a href="{{ site.baseurl }}/about">
-          <img class="nav-btn-icon" src="{{ '/assets/ui/button-secondary.svg' | relative_url }}" alt="About Icon" />
-          <span>About</span>
-        </a> 
-        <a href="{{ site.baseurl }}/contact">
-          <img class="nav-btn-icon" src="{{ '/assets/ui/button-primary.svg' | relative_url }}" alt="Contact Icon" />
-          <span>Contact</span>
-        </a>  
-      </nav>
+     <nav class="nav-links">
+        <a href="{{ site.baseurl }}/" class="nav-btn">
+        <img class="nav-btn-icon" src="{{ '/assets/ui/button-primary.svg' | relative_url }}" alt="Home Icon">
+        <span class="nav-btn-text">Home</span>
+      </a>
+      <a href="{{ site.baseurl }}/about" class="nav-btn">
+        <img class="nav-btn-icon" src="{{ '/assets/ui/button-secondary.svg' | relative_url }}" alt="About Icon">
+        <span class="nav-btn-text">About</span>
+      </a>
+      <a href="{{ site.baseurl }}/contact" class="nav-btn">
+        <img class="nav-btn-icon" src="{{ '/assets/ui/button-primary.svg' | relative_url }}" alt="Contact Icon">
+        <span class="nav-btn-text">Contact</span>
+      </a>
+    </nav>
+
     </div>
   </header>
 
