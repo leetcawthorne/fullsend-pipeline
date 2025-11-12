@@ -23,27 +23,35 @@
 }
 
 .nav-btn {
-  display: inline-flex;         /* align icon + text */
-  align-items: center;          /* vertical center */
-  justify-content: center;      /* horizontal center inside button */
-  padding: 0.5rem 1rem;         /* button padding */
-  background-color: #FF4B2B;    /* button color */
-  color: #fff;                  /* text color */
-  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
+  color: #fff;
   font-weight: 600;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.2s ease;
 }
 
 .nav-btn:hover {
-  background-color: #FF6A3D;
-  transform: translateY(-2px);
+  transform: scale(1.05)
 }
 
-.nav-btn-icon {
-  width: 80px;
-  height: 40px;
-  margin-right: 0.5rem; /* space between icon and text */
+/* Assign SVGs as background */
+.nav-btn-home {
+  background-image: url('{{ "/assets/ui/button-primary.svg" | relative_url }}');
+}
+
+.nav-btn-about {
+  background-image: url('{{ "/assets/ui/button-secondary.svg" | relative_url }}');
+}
+
+.nav-btn-contact {
+  background-image: url('{{ "/assets/ui/button-primary.svg" | relative_url }}');
 }
 
 /* Home container padding */
