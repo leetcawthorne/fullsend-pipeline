@@ -2,6 +2,12 @@
 layout: default
 title: "Contact"
 permalink: /contact/
+background_asset: /assets/images/header-bg.jpg
+background_style: "cover"
+background_repeat: "no-repeat"
+background_attachment: "fixed"
+background_color: "transparent"
+page_background: "transparent"
 ---
 
 # Contact
