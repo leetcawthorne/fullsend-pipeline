@@ -43,20 +43,6 @@
   <!-- DVOS Script -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  // 1️⃣ Determine page background dynamically (supports transparency)
-  let bgPath = "{{ page.background_asset | default: '/assets/images/header-bg.jpg' | relative_url }}";
-  let bgRepeat = "{{ page.background_repeat | default: 'no-repeat' }}";
-  let bgSize = "{{ page.background_style | default: 'cover' }}";
-  let bgAttachment = "{{ page.background_attachment | default: 'scroll' }}";
-  let bgColor = "{{ page.background_color | default: 'transparent' }}";
-
-  document.body.style.backgroundImage = `url('${bgPath}')`;
-  document.body.style.backgroundRepeat = bgRepeat;
-  document.body.style.backgroundSize = bgSize;
-  document.body.style.backgroundPosition = "center";
-  document.body.style.backgroundAttachment = bgAttachment;
-  document.body.style.backgroundColor = bgColor;
-
   // 2️⃣ Apply logo dynamically
   const logoElement = document.querySelector('img#site-logo');
   {% if page.logo %}
@@ -97,19 +83,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       })
       .catch(error => console.warn("⚠️ Visual Profile Load Error:", error));
-  }
-
-  // 5️⃣ Apply grid-light.png background to article posts
-  const articleItems = document.querySelectorAll('.post-list li');
-  articleItems.forEach(item => {
-    item.style.backgroundImage = "url('{{ '/assets/images/grid-light.png' | relative_url }}')";
-    item.style.backgroundRepeat = "repeat";
-    item.style.backgroundSize = "auto";
-    item.style.backgroundColor = "transparent"; // overlay for readability
-    item.style.borderRadius = "0.5rem";
-    item.style.padding = "1rem";
-    item.style.marginBottom = "1rem";
-    item.style.boxShadow = "0 2px 4px rgba(0,0,0,0.1)";
   });
 });
 </script>
