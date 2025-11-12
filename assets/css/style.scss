@@ -27,15 +27,12 @@
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  color: #fff;           /* text color */
+  color: #fff;               /* text color */
   font-weight: 600;
-  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  width: 160px;              /* set button width */
+  height: 50px;              /* set button height */
   border-radius: 12px;
-  
-  /* Remove any background color */
-  background-color: transparent !important;
-
-  /* Use SVG as background */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -44,11 +41,9 @@
 
 .nav-btn:hover {
   transform: scale(1.05);
-  /* Optional: add overlay color with opacity instead of solid color */
-  /* background-color: rgba(255,75,43,0.3); */
 }
 
-/* Assign SVGs as background */
+/* Assign SVGs as button backgrounds */
 .nav-btn-home {
   background-image: url('{{ "/assets/ui/button-primary.svg" | relative_url }}');
 }
