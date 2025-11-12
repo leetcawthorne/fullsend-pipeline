@@ -1,7 +1,13 @@
 ---
 layout: default
-title: "About"
+title: About
 permalink: /about/
+background_asset: /assets/images/header-bg.jpg
+background_repeat: no-repeat
+background_style: cover
+background_attachment: fixed
+background_color: rgba(255, 255, 255, 0.15)
+body_class: about-page
 ---
 
 # About FullSend Automation
