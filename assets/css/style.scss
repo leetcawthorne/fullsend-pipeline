@@ -16,6 +16,24 @@
   display: block;
 }
 
+/* Navigation button icons */
+.nav-links a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* space between icon and text */
+}
+
+.nav-links a img.nav-btn-icon {
+  width: 40px;
+  height: 24px;
+  transition: transform 0.2 ease;
+}
+
+.nav-links a:hover img.nav-btn-icon {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
 /* Home container padding */
 .home-container {
   padding: 2rem;
