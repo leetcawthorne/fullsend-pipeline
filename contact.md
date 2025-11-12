@@ -2,6 +2,7 @@
 layout: default
 title: "Contact"
 permalink: /contact/
+body_class: contact-page
 background_asset: /assets/images/header-bg.jpg
 background_style: "cover"
 background_repeat: "no-repeat"
