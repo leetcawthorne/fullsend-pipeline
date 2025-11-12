@@ -200,3 +200,21 @@ body {
     max-width: 130px;
   }
 }
+
+/* ===============================
+   Force grid background on articles
+   =============================== */
+article.post {
+  max-width: 750px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+
+  /* Force the grid-light background with overlay */
+  background: 
+    linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.3)),
+    url('{{ "/assets/images/grid-light.png" | relative_url }}') repeat !important;
+  background-size: auto !important;
+  background-blend-mode: normal !important;
+}
