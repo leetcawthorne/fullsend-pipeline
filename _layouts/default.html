@@ -14,7 +14,7 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
-<body>
+<body class="{{ page.body_class }}">
 
   <!-- Header -->
   <header class="site-header">
@@ -43,16 +43,19 @@
   <!-- DVOS Script -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  // 1️⃣ Determine page background
-  let bgPath;
-  {% if page.collection == "dvos" and page.background_asset %}
-    bgPath = "{{ page.background_asset | relative_url }}";
-  {% else %}
-    bgPath = "{{ '/assets/images/header-bg.jpg' | relative_url }}";
-  {% endif %}
+  // 1️⃣ Determine page background dynamically (supports transparency)
+  let bgPath = "{{ page.background_asset | default: '/assets/images/header-bg.jpg' | relative_url }}";
+  let bgRepeat = "{{ page.background_repeat | default: 'no-repeat' }}";
+  let bgSize = "{{ page.background_style | default: 'cover' }}";
+  let bgAttachment = "{{ page.background_attachment | default: 'scroll' }}";
+  let bgColor = "{{ page.background_color | default: 'transparent' }}";
+
   document.body.style.backgroundImage = `url('${bgPath}')`;
-  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundRepeat = bgRepeat;
+  document.body.style.backgroundSize = bgSize;
   document.body.style.backgroundPosition = "center";
+  document.body.style.backgroundAttachment = bgAttachment;
+  document.body.style.backgroundColor = bgColor;
 
   // 2️⃣ Apply logo dynamically
   const logoElement = document.querySelector('img#site-logo');
